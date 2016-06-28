@@ -1,5 +1,6 @@
 from HudsonChecker import HudsonChecker
 import serial #pySerial library
+import time
 
 checker = HudsonChecker("http://ics-web4.sns.ornl.gov:8185/api/xml")
 stats = checker.jobStats()
@@ -16,4 +17,4 @@ while readout and readout != '\n' and readout != '\r':
     readout = ser.read()
 print("^C to exit")
 while True: #endless loop, prevents Serial close and reset
-    None
+    time.sleep(1)
