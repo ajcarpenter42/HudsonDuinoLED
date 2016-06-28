@@ -1,21 +1,22 @@
 from HudsonChecker import HudsonChecker
 import serial #pySerial library
 import time
+import sys
 
-if len(sys.argv) < 2 and len(sys.argv) > 3:
+if len(sys.argv) < 2 or len(sys.argv) > 3:
     print("Usage: python HudsonCompanion.py <port> (<url>)")
 else:
     if len(sys.argv) == 3:
-        url = sys.argv[3]
+        url = sys.argv[2]
     else:
         url = "http://ics-web4.sns.ornl.gov:8185/api/xml"
     stats = HudsonChecker(url).jobStats()
-    stats = str(int(100*stats[0]/stats[1])) + '\n'
+    stats = str(int(100*stats[0]/stats[1]))
     data = stats.encode('utf-8')
     print(stats)
     print(data)
 
-    ser = serial.Serial(port=argv[1], timeout=5)
+    ser = serial.Serial(port=sys.argv[1], timeout=5)
     readout = ser.read(1) #wait until signal sent to write
     ser.write(data)
     while readout and readout != '\n' and readout != '\r':
