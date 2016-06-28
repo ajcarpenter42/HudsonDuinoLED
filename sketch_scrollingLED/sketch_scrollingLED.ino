@@ -11,6 +11,7 @@ ScrollingLED animator = ScrollingLED(CS, CLK, DIN);
 byte bytes[MAX];
 int numBytes = 8;
 int steps = 0;
+int col = 0;
 void setup()
 {
   Serial.begin(9600);
@@ -36,14 +37,20 @@ void loop()
 {
   if(Serial.available())
   {
-    steps = 0;
-    numBytes = 0;
     do
     {
-      steps = appendFontChar(Serial.read(), bytes, MAX, numBytes, steps);
+      char c = Serial.read();
+      if (c=='\n' || c=='\r')
+      {
+        steps = 0;
+        col = 0;
+        numBytes = 0;
+      }
+      else
+        numBytes -= 8;
+      col = appendFontChar(c, bytes, MAX, numBytes, col);
     } while(Serial.available() && numBytes < MAX);
     numBytes+=8;
-    steps = 0;
     printBytes();
     Serial.write('\n');
   }
