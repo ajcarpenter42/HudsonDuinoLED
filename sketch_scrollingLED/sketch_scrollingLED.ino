@@ -5,13 +5,14 @@
 #define CLK  11
 #define DIN  12
 
-#define MAX 32 //max number of bytes (multiple of 8)
+#define MAX 128 //max number of bytes (multiple of 8)
 
 ScrollingLED animator = ScrollingLED(CS, CLK, DIN);
 byte bytes[MAX];
 int numBytes = 8;
 int steps = 0;
 int col = 0;
+bool reset = false;
 void setup()
 {
   Serial.begin(9600);
@@ -37,18 +38,25 @@ void loop()
 {
   if(Serial.available())
   {
+    numBytes -= 8;
     do
     {
       char c = Serial.read();
       if (c=='\n' || c=='\r')
       {
-        steps = 0;
-        col = 0;
-        numBytes = 0;
+        reset = true;
       }
       else
-        numBytes -= 8;
-      col = appendFontChar(c, bytes, MAX, numBytes, col);
+      {
+        if (reset)
+        {
+          steps = 0;
+          col = 0;
+          numBytes = 0;
+          reset = false;
+        }
+        col = appendFontChar(c, bytes, MAX, numBytes, col);
+      }
     } while(Serial.available() && numBytes < MAX);
     numBytes+=8;
     printBytes();
