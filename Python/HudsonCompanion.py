@@ -19,13 +19,17 @@ else:
     while True:
         print("Checking Hudson status")
         stats = HudsonChecker(url).jobStats()
-        stats = str(int(100*stats[0]/stats[1])) + "\n"
-        data = stats.encode('utf-8')
+        stats = int(100*stats[0]/stats[1])
+        if stats >= 100:
+            data = "@\n".encode('utf-8')
+        else:
+            stats = str(stats) + "%\n"
+            data = stats.encode('utf-8')
         print(stats)
         print(data)
     
         ser.write(data)
-        while readout and readout != '\n' and readout != '\r':
+        while readout:
             print(readout.decode('utf-8'), end="", flush=True)
             readout = ser.read()
         print("^C to exit")

@@ -1,5 +1,6 @@
+//author: Amanda Carpenter
+
 //A font table utility for an 8x8 LED
-//Similar to Font8x8.h, but uses PROGMEM (flash) instead of SRAM
 
 //=================font table======================
 //..............(methods below)....................
@@ -16,20 +17,119 @@
 
 const PROGMEM byte font_sp [5] =
   {
-    0b001000000,
-    0b000000000,
-    0b000000000,
-    0b000000000,
-    0b000000000
+    0b00100000,
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000000
+  };
+
+const PROGMEM byte font_ex [5] =
+  {
+    0b00100001,
+    0b00000001,
+    0b00000001,
+    0b00000000,
+    0b00000001
+  };
+
+const PROGMEM byte font_qt [5] =
+  {
+    0b01100101,
+    0b00000101,
+    0b00000000,
+    0b00000000,
+    0b00000001
+  };
+
+const PROGMEM byte font_num [5] =
+  {
+    0b10101010,
+    0b00011111,
+    0b00001010,
+    0b00011111,
+    0b00001010
+  };
+
+const PROGMEM byte font_dol [5] =
+  {
+    0b10000111,
+    0b00001010,
+    0b00000110,
+    0b00000011,
+    0b00001110
+  };
+
+const PROGMEM byte font_pct [5] =
+  {
+    0b10111001,
+    0b00011010,
+    0b00000100,
+    0b00001011,
+    0b00010011
+  };
+
+const PROGMEM byte font_and [5] =
+  {
+    0b10000100,
+    0b00001010,
+    0b00000100,
+    0b00001011,
+    0b00001101
+  };
+
+const PROGMEM byte font_apos [5] =
+  {
+    0b00100001,
+    0b00000001,
+    0b00000000,
+    0b00000000,
+    0b00000000
+  };
+
+const PROGMEM byte font_paren1 [5] =
+  {
+    0b01000001,
+    0b00000010,
+    0b00000010,
+    0b00000010,
+    0b00000001
+  };
+
+const PROGMEM byte font_paren2 [5] =
+  {
+    0b01000010,
+    0b00000001,
+    0b00000001,
+    0b00000001,
+    0b00000010
+  };
+
+const PROGMEM byte font_dash [5] =
+  {
+    0b01100000,
+    0b00000000,
+    0b00000111,
+    0b00000000,
+    0b00000000
   };
 
 const PROGMEM byte font_dot [5] =
   {
-    0b001000000,
-    0b000000000,
-    0b000000000,
-    0b000000000,
-    0b000000001
+    0b00100000,
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000001
+  };
+
+const PROGMEM byte font_slash [5] =
+  {
+    0b10100001,
+    0b00000010,
+    0b00000100,
+    0b00001000,
+    0b00010000
   };
 
 const byte PROGMEM font_0 [5] =
@@ -135,7 +235,7 @@ const byte PROGMEM font_B [5] =
   {
     0b01100110,
     0b00000101,
-    0b00000111,
+    0b00000110,
     0b00000101,
     0b00000110
   };
@@ -590,9 +690,19 @@ const byte PROGMEM font_z [5] =
     0b00001111
   };
 
-const byte* fonts [64] = //contains PROGMEM addresses
+const byte PROGMEM smiley [5] =
+  {
+    0b10101010,
+    0b00001010,
+    0b00000000,
+    0b00010001,
+    0b00001110
+  };
+
+const byte* fonts [] = //contains PROGMEM addresses
 {
-  font_sp, font_dot, font_0, font_1, font_2, font_3, font_4, font_5, font_6, font_7, font_8, font_9,
+  font_sp, font_ex, font_qt, font_num, font_dol, font_pct, font_and, font_apos, font_paren1, font_paren2,
+  font_dash, font_dot, font_slash, font_0, font_1, font_2, font_3, font_4, font_5, font_6, font_7, font_8, font_9,
   font_A, font_B, font_C,font_D, font_E, font_F, font_G, font_H, font_I, font_J, font_K, font_L, font_M,
   font_N, font_O, font_P, font_Q, font_R, font_S, font_T, font_U, font_V, font_W, font_X, font_Y, font_Z,
   font_a, font_b, font_c, font_d, font_e, font_f, font_g, font_h, font_i, font_j, font_k, font_l, font_m,
@@ -624,18 +734,21 @@ byte getFontBytes(char str [], int len, byte buff [], int maxNumBytes, int& numB
 byte appendFontChar(char c, byte buff[], int maxNumBytes, int &numBytes, byte col);
 
 //====================function defs================
+//characters: ' ' thru ')', '-' thru '9', 'A' thru 'Z', 'a' thru 'z'; and '@' = smiley
 const byte* getFont(char c)
 {
+  if (c == '@')
+    return smiley;
   if (c > 'z')
     c = 0;
   if (c >= 'a')
     c -= ('a' - 'Z' - 1);
   if (c >= 'A')
     c -= ('A' - '9' - 1);
-  if (c >= '0')
-    c -= ('0' - '.' - 1);
-  if (c >= '.')
-    c -= ('.' - 1);
+  if (c >= '-')
+    c -= ('-' - ')' - 1);
+  if (c > ' ')
+    c -= ' ';
   else
     c = 0;
   return fonts[c]; //if fonts in PROGMEM: pgm_read_ptr_near(fonts+c);
