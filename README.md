@@ -1,5 +1,9 @@
 # HudsonDuinoLED
 
+Started out as a Hudson build status indicator,
+but can display pretty much any text that's
+written to the Arduino's serial port.
+
 ## Requirements
 
  * Arduino
