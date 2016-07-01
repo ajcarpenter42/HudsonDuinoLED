@@ -20,11 +20,11 @@ else:
     while True:
         print("Checking Hudson status")
         stats = HudsonChecker(url).jobStats()
-        print("Hudson: " + stats)
+        print("Hudson: %d / %d" % (stats[0], stats[1]))
 
         print("Checking Indico")
         p = IndicoChecker().participants
-        print("Participants: " + p)
+        print("Participants: %d" % p)
 
         perc = int(100*stats[0]/stats[1])
         if perc >= 100:
@@ -36,8 +36,8 @@ else:
 
         data = data + "\n"
 
+        print("Sending: " + data, end="")
         data = data.encode('utf-8')
-        print(data)
     
         ser.write(data)
         while readout:
