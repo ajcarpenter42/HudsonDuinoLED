@@ -13,11 +13,16 @@ class HudsonChecker:
         numTested = 0;
         for elem in list(self.root):
             if elem.tag == "job":
+                name = elem.find('name')
                 color = elem.find('color')
+                if color is None:
+                    continue
                 if "anime" in color.text:
                     continue
-                if color != None and color.text == "green":
+                if color.text in ( "green", "yellow" ):
                     numPassed += 1
+                else:
+                    print("Hundson: %s is %s" % (name.text, color.text))
                 numTested += 1
         return (numPassed, numTested)
 
